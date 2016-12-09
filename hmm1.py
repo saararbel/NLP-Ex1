@@ -22,16 +22,30 @@ def buildLists():
     return words,tags,wordsAndTags
 
 
+def writeEmleFile():
+    eFile = open(sys.argv[2], 'w')
+    eMle = calcEprob(words, tags, wordsAndTags)
+    for (word, tag) in eMle:
+        eFile.write(word + "," + tag + " = " + str(eMle[(word, tag)]) + "\n")
+
+
+def prepare_for_writing(qprob):
+    return '\n'.join([' '.join([w1, w2, w3] + [str(p) for p in qprob[(w1, w2, w3)]]) for w1, w2, w3 in qprob])
+
+
 if __name__ == '__main__':
     parsedFile = parseInputFile()
     words,tags, wordsAndTags = buildLists()
 
-    calcQprob(tags, len(set(words)))
+    qprob = calcQprob(tags, len(set(words)))
+    open(sys.argv[3], 'w').write(prepare_for_writing(qprob))
+    
 
-    # eFile = open(sys.argv[2],'w')
-    # eMle = calcEprob(words,tags,wordsAndTags)
-    # for (word,tag) in eMle :
-    #     eFile.write(word+","+tag + " = " + str(eMle[(word,tag)]) + "\n")
+
+
+    writeEmleFile()
+
+
 
 
 

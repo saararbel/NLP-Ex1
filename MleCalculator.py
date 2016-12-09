@@ -25,13 +25,13 @@ def calcQprob(tags, numWords):
     for tag1 in tagSet:
         for tag2 in tagSet:
             for tag3 in tagSet:
-                if (tag1,tag2,tag3) not in qMle.keys():
+                if (tag1,tag2,tag3) not in qMle:
                     qMle[(tag1, tag2, tag3)] = []
-                qMle[(tag1,tag2,tag3)].append(float(tripletCounter[(tag1,tag2,tag3)]) / pairsCounter[tag1,tag2])
+                qMle[(tag1,tag2,tag3)].append(float(tripletCounter[(tag1,tag2,tag3)]) / max(pairsCounter[(tag1,tag2)],1))
                 qMle[(tag1,tag2,tag3)].append(float(pairsCounter[(tag2,tag3)]) / onesCounter[tag2])
                 qMle[(tag1,tag2,tag3)].append(float(onesCounter[tag3]) / numWords)
 
-    print 1
+    return qMle
 
 
 
