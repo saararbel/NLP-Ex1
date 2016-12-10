@@ -1,9 +1,19 @@
 import sys
 
-
 def readFile(filePath):
     with open(filePath) as inputFile:
         return inputFile.read()
+
+
+def backoff(probs):
+    return (float(probs[0]) + float(probs[1]) + float(probs[2])) / 3
+
+
+def sintisize(e_mle, param):
+    if param not in e_mle:
+        return 0.0
+
+    return e_mle[param]
 
 
 def vitterbi_algorithm(words, e_mle, q_mle, tags):
@@ -14,7 +24,9 @@ def vitterbi_algorithm(words, e_mle, q_mle, tags):
             for r in tags:
                 max_vitterbi = 0
                 for t_tag in tags:
-                    temp_v = v[(i, t_tag, t)] * q_mle[(t_tag, t, r)] * e_mle[(word, r)]
+                    if (i, t_tag, t) not in v:
+                        v[(i, t_tag, t)] = 0
+                    temp_v = v[(i, t_tag, t)] * backoff(q_mle[(t_tag, t, r)]) * sintisize(e_mle,(word, r))
                     if temp_v > max_vitterbi:
                         max_vitterbi = temp_v
                 v[(i + 1, t, r)] = max_vitterbi
@@ -52,7 +64,6 @@ if __name__ == '__main__':
     words_in_input_file = readFile(sys.argv[1]).split()
     q_mle_lines = parse_q_mle_file(sys.argv[2])
     e_mle = parse_e_mle_file(sys.argv[3])
-
     vitterbi_algorithm(words_in_input_file, e_mle, q_mle_lines, extractTags(q_mle_lines))
 
     # out_file_name = readFile(sys.argv[4])
