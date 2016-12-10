@@ -16,8 +16,9 @@ def calc_e_prob(words, tags, wordAndTags):
 
 def calcQprob(tags, numWords):
     qMle = {}
-    tripletsTags = zip(['start', 'start'] + tags[:-2], ['start'] + tags[:-1], tags)
-    pairsTags = zip(['start'] + tags[:-1], tags)
+    tags = ['start', 'start'] + tags
+    tripletsTags = zip(tags[:-2], tags[1:-1], tags[2:])
+    pairsTags = zip(tags[:-1], tags[1:])
 
     tagSet = set(tags)
     tripletCounter = Counter(tripletsTags)
@@ -27,8 +28,7 @@ def calcQprob(tags, numWords):
     for tag1 in tagSet:
         for tag2 in tagSet:
             for tag3 in tagSet:
-                if (tag1, tag2, tag3) not in qMle:
-                    qMle[(tag1, tag2, tag3)] = []
+                qMle[(tag1, tag2, tag3)] = []
                 qMle[(tag1, tag2, tag3)].append(
                     float(tripletCounter[(tag1, tag2, tag3)]) / max(pairsCounter[(tag1, tag2)], 1))
                 qMle[(tag1, tag2, tag3)].append(float(pairsCounter[(tag2, tag3)]) / onesCounter[tag2])

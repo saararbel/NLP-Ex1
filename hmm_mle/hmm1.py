@@ -23,7 +23,7 @@ def buildLists(parsedFile):
 
 
 def prepare_e(e_mle):
-    return '\n'.join([' '.join([word, tag, e_mle[(word, tag)]]) for word, tag in e_mle])
+    return '\n'.join([' '.join([word, tag, str(e_mle[(word, tag)])]) for word, tag in e_mle])
 
 
 def write_e_mle_file():
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     parsedFile = parseInputFile()
     words, tags, wordsAndTags = buildLists(parsedFile)
 
-    qprob = calcQprob(tags, len(set(words)))
+    qprob = calcQprob(tags, len(words))
     open(sys.argv[3], 'w').write(prepare_q(qprob))
 
     write_e_mle_file()
