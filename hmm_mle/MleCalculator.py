@@ -1,14 +1,26 @@
 from collections import Counter
 
 
-def calc_e_prob(words, tag_lines, wordAndTags):
+def calc_e_prob(words, tag_lines, word_and_tags):
+    counter = Counter(words)
+    single_words = set([word for word, appear in counter.iteritems() if appear == 1])
+
+    for idx,(word,tag) in enumerate(word_and_tags):
+        if word in single_words:
+            word_and_tags[idx] = ('very_very_rare_word_5_5_5',tag)
+
+    for idx,word in enumerate(words):
+        if word in single_words:
+            words[idx] = 'very_very_rare_word_5_5_5'
+
+
     eMle = {}
     tagsSet = set()
     tagsCounter = Counter()
     for tags in tag_lines:
         tagsSet = tagsSet.union(tags)
         tagsCounter.update(tags)
-    wordAndTagsCounter = Counter(wordAndTags)
+    wordAndTagsCounter = Counter(word_and_tags)
 
     for word in set(words):
         for tag in tagsSet:
