@@ -42,12 +42,18 @@ def prepare_q(qprob):
     return '\n'.join([' '.join([w1, w2, w3] + [str(p) for p in qprob[(w1, w2, w3)]]) for w1, w2, w3 in qprob])
 
 
+def write_q_mle_file():
+    open(sys.argv[3], 'w').write(prepare_q(qprob))
+
+
 if __name__ == '__main__':
     parsedFile = parseInputFile()
     words, tags, wordsAndTags = buildLists(parsedFile)
+    print "words and tags extracted"
 
     qprob = calcQprob(tags, len(words))
-    open(sys.argv[3], 'w').write(prepare_q(qprob))
+    write_q_mle_file()
+    print "q calculated"
 
     write_e_mle_file(words, tags, wordsAndTags)
     print "Finished"
