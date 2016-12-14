@@ -34,8 +34,6 @@ def prepare_e(e_mle):
 def write_e_mle_file(words, tags, wordsAndTags):
     e_mle = calc_e_prob(words, tags, wordsAndTags)
     open(sys.argv[2], 'w').write(prepare_e(e_mle))
-    # for (word, tag) in eMle:
-    #     eFile.write(word + "," + tag + " = " + str(eMle[(word, tag)]) + "\n")
 
 
 def prepare_q(qprob):

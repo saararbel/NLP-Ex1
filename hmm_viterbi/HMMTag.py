@@ -17,31 +17,20 @@ def sintisize(e_mle, param):
     return e_mle[param]
 
 
-def vitterbi_algorithm(lines, e_mle, q_mle, tags):
-    vitt = []
+def vitterbi_algorithm(line, e_mle, q_mle, tags):
+    v = [[('start', 'start', 1.0)]]
+    bp = {}
 
-    for words in lines:
-        v = {(0, 'start', 'start'): 1}
-        bp = {}
-        for i, word in enumerate(words):
-            for t in tags:
-                for r in tags:
-                    max_vitterbi = 0
-                    max_t = None
-                    for t_tag in tags:
-                        if (i, t_tag, t) not in v:
-                            v[(i, t_tag, t)] = 0
-                        temp_v = v[(i, t_tag, t)] * backoff(q_mle[(t_tag, t, r)]) * sintisize(e_mle, (word, r))
-                        if temp_v > max_vitterbi:
-                            max_vitterbi = temp_v
-                            max_t = t_tag
-                    v[(i + 1, t, r)] = max_vitterbi
-                    bp[(i, t, r)] = max_t
-        vitt.append()
-    #     TODO: continue viterbi
+    for i, word in enumerate(line):
+        maxProb = {}
+        for t_tag, t, prob in v[i]:
+            for r in tags:
+                temp = prob * backoff(q_mle[(t_tag, t, r)]) * sintisize(e_mle, (word, r))
+                if (t, r) not in maxProb or temp > maxProb[(t, r)]:
+                    maxProb[(t, r)] = temp
+        v.append([(t, r, maxProb[(t, r)]) for t, r in maxProb])
 
-
-    return vitt
+    return v
 
 
 def extractTags(q_mle_lines):
