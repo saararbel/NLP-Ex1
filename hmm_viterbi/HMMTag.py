@@ -17,19 +17,35 @@ def sintisize(e_mle, param):
 
 
 def vitterbi_algorithm(words, e_mle, q_mle, tags):
-    v = {(0, 'start', 'start'): 1}
+    v = {}
+    bp = {}
+
+    v[(0, 'start', 'start')] = 1
+
+    # first iteration
+    for tag1 in tags:
+        v[(1,'start',tag1)] = q_mle[('start','start',tag1)] * e_mle[(tag1, words[0])]
+        bp[(1,tag1)] = 'start'
+
+    # second iteration
+    for tag1 in tags:
+        for tag2 in tags:
+            v[(2,tag1,tag2)] = v[(1,bp[(1,tag1)],tag1)] * q_mle[(bp[(1,tag1)],tag1,tag2)] * e_mle[(tag2, words[1])]
+
+        bp[(2, tag2)] = tag1
+
+    # third iteration
+    for tag1 in tags:
+        for tag2 in tags:
+            v[(3,tag1,tag2)] = v[(2,bp[(2,tag1)] ,tag1)] * q_mle[(bp[(2,tag1)],tag1,tag2)] * e_mle[(tag2, words[2])]
+
+
+
 
     for i, word in enumerate(words):
         for t in tags:
             for r in tags:
-                max_vitterbi = 0
-                for t_tag in tags:
-                    if (i, t_tag, t) not in v:
-                        v[(i, t_tag, t)] = 0
-                    temp_v = v[(i, t_tag, t)] * backoff(q_mle[(t_tag, t, r)]) * sintisize(e_mle,(word, r))
-                    if temp_v > max_vitterbi:
-                        max_vitterbi = temp_v
-                v[(i + 1, t, r)] = max_vitterbi
+                v[(i+1, )]
 
     return v
 
