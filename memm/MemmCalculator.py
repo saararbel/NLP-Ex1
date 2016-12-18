@@ -78,10 +78,10 @@ def to_feature_lines(histories, unique_features, tags, output_file_path='feature
         print 'File "%s" tuncated' % output_file_path
     file_str = StringIO()
     for word_index, history in enumerate(histories):
-        file_str.write("%s " % tags_indexes[history['ti']])
-        file_str.write(
-            ' '.join([to_feature(i) for i, feature in enumerated_unique_features if feature.test(history)]))
-        file_str.write('\n')
+        # file_str.write("%s " % tags_indexes[history['ti']])
+        file_str.write("%s %s%s" % (tags_indexes[history['ti']],
+            ' '.join([to_feature(i) for i, feature in enumerated_unique_features if feature.test(history)]), '\n'))
+        # file_str.write('\n')
         if word_index % 100 == 0:
             print "Word %s checked" % word_index
         if word_index % 10000 == 0:
@@ -89,7 +89,7 @@ def to_feature_lines(histories, unique_features, tags, output_file_path='feature
                 output_file.write(file_str.getvalue())
                 file_str = StringIO()
     with open(output_file_path, 'a') as output_file:
-        output_file.write(file_str)
+        output_file.write(file_str.getvalue())
 
 
 if __name__ == '__main__':
