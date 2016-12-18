@@ -1,6 +1,9 @@
+import os
 import sys
 from cStringIO import StringIO
 from collections import Counter
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from memm import general_features
 from memm.general_features import GeneralFeatures
