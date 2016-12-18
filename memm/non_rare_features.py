@@ -7,15 +7,15 @@ class WordAndTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "WordAndTag(word=%s,tag=%s)" % (self.history['wi'], self.history['ti'])
+        return "WordAndTag(word=%s)" % self.history['wi']
 
     def __eq__(self, other):
         if isinstance(other, WordAndTag):
-            return self.history['wi'] == other.history['wi'] and self.history['ti'] == other.history['ti']
+            return self.history['wi'] == other.history['wi']
         return False
 
     def test(self, current_history):
-        return self.history['wi'] == current_history['wi'] and self.history['ti'] == current_history['ti']
+        return self.history['wi'] == current_history['wi']
 
 
 class WordAndTagBuilder(FeatureBuilder):

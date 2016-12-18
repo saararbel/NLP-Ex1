@@ -32,7 +32,7 @@ def extract_data(trainingFile):
             words_counter[word] += 1
         tagged_lines.append(tagged_words)
 
-    return tagged_lines, [word for word, ocurrences in words_counter.iteritems() if ocurrences > 5], sorted(list(tags))
+    return tagged_lines, set(word for word, ocurrences in words_counter.iteritems() if ocurrences > 5), sorted(list(tags))
 
 
 def build_history(lines, not_rare_words):
@@ -45,7 +45,7 @@ def build_history(lines, not_rare_words):
                        'wi+2': padded_line[i + 2][0], 'ti': word_tag_tuple[1], 'ti-1': padded_line[i - 1][1],
                        'ti-2': padded_line[i - 2][1]}
             histories.append(history)
-
+    print "History built"
     return histories
 
 
@@ -62,7 +62,7 @@ def extract_features_from_histories(histories, not_rare_words):
         for feature_builder in feature_builders(not_rare_words, history['wi']):
             features.append(feature_builder.from_history(history))
             # print "Finished features for " + history['wi'] + ", " + history['ti']
-
+    print "features extracted"
     return features
 
 
@@ -84,6 +84,7 @@ def to_feature_lines(histories, unique_features, tags, output_file_path='feature
         file_str.write('\n')
         if word_index % 100 == 0:
             print "Word %s checked" % word_index
+        if word_index % 10000 == 0:
             with open(output_file_path, 'a') as output_file:
                 output_file.write(file_str.getvalue())
                 file_str = StringIO()
@@ -92,7 +93,7 @@ def to_feature_lines(histories, unique_features, tags, output_file_path='feature
 
 
 if __name__ == '__main__':
-    raw_seq_lines = parse_input_file(sys.argv[1])[:1000]
+    raw_seq_lines = parse_input_file(sys.argv[1])
     tagged_lines, non_rare_words, tags = extract_data(raw_seq_lines)
     print 'Tags: [' + '|'.join(tag + ' ' + str(i) for i, tag in enumerate(tags)) + ']'
     print 'Words, total %s ' % sum(len(x) for x in tagged_lines)

@@ -7,15 +7,15 @@ class LastTagAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "LastTagAndCurrentTag(last_tag=%s,tag=%s)" % (self.history['ti-1'], self.history['ti'])
+        return "LastTagAndCurrentTag(last_tag=%s)" % self.history['ti-1']
 
     def __eq__(self, other):
         if isinstance(other, LastTagAndCurrentTag):
-            return self.history['ti-1'] == other.history['ti-1'] and self.history['ti'] == other.history['ti']
+            return self.history['ti-1'] == other.history['ti-1']
         return False
 
     def test(self, current_history):
-        return self.history['ti-1'] == current_history['ti-1'] and self.history['ti'] == current_history['ti']
+        return self.history['ti-1'] == current_history['ti-1']
 
 
 class LastTagAndCurrentTagBuilder(FeatureBuilder):
@@ -31,18 +31,15 @@ class LastTwoTagsAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "LastTwoTagsAndCurrentTag(pre_last_tag=%s,last_tag=%s,tag=%s)" % (
-            self.history['ti-2'], self.history['ti-1'], self.history['ti'])
+        return "LastTwoTagsAndCurrentTag(pre_last_tag=%s,last_tag=%s)" % (self.history['ti-2'], self.history['ti-1'])
 
     def __eq__(self, other):
         if isinstance(other, LastTwoTagsAndCurrentTag):
-            return self.history['ti-2'] == other.history['ti-2'] and self.history['ti-1'] == other.history['ti-1'] and \
-                   self.history['ti'] == other.history['ti']
+            return self.history['ti-2'] == other.history['ti-2'] and self.history['ti-1'] == other.history['ti-1']
         return False
 
     def test(self, current_history):
-        return self.history['ti-2'] == current_history['ti-2'] and self.history['ti-1'] == current_history['ti-1'] and \
-               self.history['ti'] == current_history['ti']
+        return self.history['ti-2'] == current_history['ti-2'] and self.history['ti-1'] == current_history['ti-1']
 
 
 class LastTwoTagsAndCurrentTagBuilder(FeatureBuilder):
@@ -58,15 +55,15 @@ class LastWordAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "LastWordAndCurrentTag(last_word=%s,tag=%s)" % (self.history['wi-1'], self.history['ti'])
+        return "LastWordAndCurrentTag(last_word=%s)" % self.history['wi-1']
 
     def __eq__(self, other):
         if isinstance(other, LastWordAndCurrentTag):
-            return self.history['wi-1'] == other.history['wi-1'] and self.history['ti'] == other.history['ti']
+            return self.history['wi-1'] == other.history['wi-1']
         return False
 
     def test(self, current_history):
-        return self.history['wi-1'] == current_history['wi-1'] and self.history['ti'] == current_history['ti']
+        return self.history['wi-1'] == current_history['wi-1']
 
 
 class LastWordAndCurrentTagBuilder(FeatureBuilder):
@@ -82,16 +79,15 @@ class WordBeforeLastWordAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "WordBeforeLastWordAndCurrentTag(word_before_last_word=%s,tag=%s)" % (
-            self.history['wi-2'], self.history['ti'])
+        return "WordBeforeLastWordAndCurrentTag(word_before_last_word=%s)" % self.history['wi-2']
 
     def __eq__(self, other):
         if isinstance(other, WordBeforeLastWordAndCurrentTag):
-            return self.history['wi-2'] == other.history['wi-2'] and self.history['ti'] == other.history['ti']
+            return self.history['wi-2'] == other.history['wi-2']
         return False
 
     def test(self, current_history):
-        return self.history['wi-2'] == current_history['wi-2'] and self.history['ti'] == current_history['ti']
+        return self.history['wi-2'] == current_history['wi-2']
 
 
 class WordBeforeLastWordAndCurrentTagBuilder(FeatureBuilder):
@@ -107,15 +103,15 @@ class NextWordAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "NextWordAndCurrentTag(next_word=%s,tag=%s)" % (self.history['wi+1'], self.history['ti'])
+        return "NextWordAndCurrentTag(next_word=%s)" % self.history['wi+1']
 
     def __eq__(self, other):
         if isinstance(other, NextWordAndCurrentTag):
-            return self.history['wi+1'] == other.history['wi+1'] and self.history['ti'] == other.history['ti']
+            return self.history['wi+1'] == other.history['wi+1']
         return False
 
     def test(self, current_history):
-        return self.history['wi+1'] == current_history['wi+1'] and self.history['ti'] == current_history['ti']
+        return self.history['wi+1'] == current_history['wi+1']
 
 
 class NextWordAndCurrentTagBuilder(FeatureBuilder):
@@ -131,16 +127,15 @@ class WordAfterNextWordAndCurrentTag(Feature):
         self.history = history
 
     def __repr__(self):
-        return "WordAfterNextWordAndCurrentTag(word_after_next_word=%s,tag=%s)" % (
-        self.history['wi+2'], self.history['ti'])
+        return "WordAfterNextWordAndCurrentTag(word_after_next_word=%s)" % self.history['wi+2']
 
     def __eq__(self, other):
         if isinstance(other, WordAfterNextWordAndCurrentTag):
-            return self.history['wi+2'] == other.history['wi+2'] and self.history['ti'] == other.history['ti']
+            return self.history['wi+2'] == other.history['wi+2']
         return False
 
     def test(self, current_history):
-        return self.history['wi+2'] == current_history['wi+2'] and self.history['ti'] == current_history['ti']
+        return self.history['wi+2'] == current_history['wi+2']
 
 
 class WordAfterNextWordAndCurrentTagBuilder(FeatureBuilder):

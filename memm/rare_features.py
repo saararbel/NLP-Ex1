@@ -13,16 +13,15 @@ class PrefixAndSize(Feature):
         self.history = history
 
     def __repr__(self):
-        return "PrefixAndSize(word=%s,tag=%s)" % (self.history['wi'], self.history['ti'])
+        return "PrefixAndSize(word=%s)" % self.history['wi']
 
     def __eq__(self, other):
         if isinstance(other, PrefixAndSize):
-            return self.history['wi'] == other.history['wi'] and self.history['ti'] == other.history['ti']
+            return self.history['wi'] == other.history['wi']
         return False
 
     def test(self, current_history):
-        return self.history['ti'] == current_history['ti'] and len(current_history['wi']) <= 4 and \
-               self.history['wi'].startswith(current_history['wi'])
+        return len(current_history['wi']) <= 4 and self.history['wi'].startswith(current_history['wi'])
 
 
 class PrefixAndSizeBuilder(FeatureBuilder):
@@ -35,16 +34,15 @@ class SuffixAndSize(Feature):
         self.history = history
 
     def __repr__(self):
-        return "SuffixAndSize(word=%s,tag=%s)" % (self.history['wi'], self.history['ti'])
+        return "SuffixAndSize(word=%s)" % self.history['wi']
 
     def __eq__(self, other):
         if isinstance(other, SuffixAndSize):
-            return self.history['wi'] == other.history['wi'] and self.history['ti'] == other.history['ti']
+            return self.history['wi'] == other.history['wi']
         return False
 
     def test(self, current_history):
-        return self.history['ti'] == current_history['ti'] and len(current_history['wi']) <= 4 and self.history[
-            'wi'].endswith(current_history['wi'])
+        return len(current_history['wi']) <= 4 and self.history['wi'].endswith(current_history['wi'])
 
 
 class SuffixAndSizeBuilder(FeatureBuilder):
@@ -57,16 +55,13 @@ class ContainsANumber(Feature):
         self.history = history
 
     def __repr__(self):
-        return "ContainsANumber(tag=%s)" % (self.history['ti'])
+        return "ContainsANumber"
 
     def __eq__(self, other):
-        if isinstance(other, ContainsANumber):
-            return self.history['ti'] == other.history['ti']
-        return False
+        return isinstance(other, ContainsANumber)
 
     def test(self, current_history):
         return bool(RE_D.search(current_history['wi']))
-        # return any(char.isdigit() for char in current_history['wi']) and self.history['ti'] == current_history['ti']
 
 
 class ContainsANumberBuilder(FeatureBuilder):
@@ -79,16 +74,13 @@ class ContainsAnUpperCase(Feature):
         self.history = history
 
     def __repr__(self):
-        return "ContainsAnUpperCase(tag=%s)" % (self.history['ti'])
+        return "ContainsAnUpperCase"
 
     def __eq__(self, other):
-        if isinstance(other, ContainsAnUpperCase):
-            return self.history['ti'] == other.history['ti']
-        return False
+        return isinstance(other, ContainsAnUpperCase)
 
     def test(self, current_history):
         return bool(RE_CAPITAL.search(current_history['wi']))
-        # return any(char.isupper() for char in current_history['wi']) and self.history['ti'] == current_history['ti']
 
 
 class ContainsAnUpperCaseBuilder(FeatureBuilder):
@@ -101,16 +93,13 @@ class ContainsAnHyphen(Feature):
         self.history = history
 
     def __repr__(self):
-        return "ContainsAnHyphen(tag=%s)" % (self.history['ti'])
+        return "ContainsAnHyphen"
 
     def __eq__(self, other):
-        if isinstance(other, ContainsAnHyphen):
-            return self.history['ti'] == other.history['ti']
-        return False
+        return isinstance(other, ContainsAnHyphen)
 
     def test(self, current_history):
         return bool(RE_HYPHEN.search(current_history['wi']))
-        # return any(char == '-' for char in current_history['wi']) and self.history['ti'] == current_history['ti']
 
 
 class ContainsAnHyphenBuilder(FeatureBuilder):
