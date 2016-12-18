@@ -2,6 +2,7 @@ import re
 
 from memm.feature import Feature
 from memm.featurebuilder import FeatureBuilder
+from memm.general_features import GeneralFeatures
 
 RE_D = re.compile('\d')
 RE_HYPHEN = re.compile('-')
@@ -108,5 +109,6 @@ class ContainsAnHyphenBuilder(FeatureBuilder):
 
 
 class RareFeatures():
-    FEATURES = [PrefixAndSizeBuilder(), SuffixAndSizeBuilder(), ContainsANumberBuilder(), ContainsAnUpperCaseBuilder(),
-                ContainsAnHyphenBuilder()]
+    FEATURES = GeneralFeatures.FEATURES + [PrefixAndSizeBuilder(), SuffixAndSizeBuilder(), ContainsANumberBuilder(),
+                                           ContainsAnUpperCaseBuilder(),
+                                           ContainsAnHyphenBuilder()]

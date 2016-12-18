@@ -1,5 +1,6 @@
 from memm.feature import Feature
 from memm.featurebuilder import FeatureBuilder
+from memm.general_features import GeneralFeatures
 
 
 class WordAndTag(Feature):
@@ -24,4 +25,4 @@ class WordAndTagBuilder(FeatureBuilder):
 
 
 class NotRareFeatures():
-    FEATURES = [WordAndTagBuilder()]
+    FEATURES = GeneralFeatures.FEATURES + [WordAndTagBuilder()]

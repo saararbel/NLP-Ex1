@@ -32,7 +32,8 @@ def extract_data(trainingFile):
             words_counter[word] += 1
         tagged_lines.append(tagged_words)
 
-    return tagged_lines, set(word for word, ocurrences in words_counter.iteritems() if ocurrences > 5), sorted(list(tags))
+    return tagged_lines, set(word for word, ocurrences in words_counter.iteritems() if ocurrences > 5), sorted(
+        list(tags))
 
 
 def build_history(lines, not_rare_words):
@@ -51,9 +52,9 @@ def build_history(lines, not_rare_words):
 
 def feature_builders(not_rare_words, word):
     if word in not_rare_words:
-        return NotRareFeatures.FEATURES + GeneralFeatures.FEATURES
+        return NotRareFeatures.FEATURES
 
-    return RareFeatures.FEATURES + GeneralFeatures.FEATURES
+    return RareFeatures.FEATURES
 
 
 def extract_features_from_histories(histories, not_rare_words):
@@ -78,16 +79,15 @@ def to_feature_lines(histories, unique_features, tags, output_file_path='feature
         print 'File "%s" tuncated' % output_file_path
     file_str = StringIO()
     for word_index, history in enumerate(histories):
-        # file_str.write("%s " % tags_indexes[history['ti']])
-        file_str.write("%s %s%s" % (tags_indexes[history['ti']],
-            ' '.join([to_feature(i) for i, feature in enumerated_unique_features if feature.test(history)]), '\n'))
-        # file_str.write('\n')
+        file_str.write("%s " % tags_indexes[history['ti']])
+        file_str.write(':1 '.join([str(i) for i, feature in enumerated_unique_features if feature.test(history)]))
+        file_str.write(':1\n')
         if word_index % 100 == 0:
             print "Word %s checked" % word_index
-        if word_index % 10000 == 0:
-            with open(output_file_path, 'a') as output_file:
-                output_file.write(file_str.getvalue())
-                file_str = StringIO()
+            if word_index % 10000 == 0:
+                with open(output_file_path, 'a') as output_file:
+                    output_file.write(file_str.getvalue())
+                    file_str = StringIO()
     with open(output_file_path, 'a') as output_file:
         output_file.write(file_str.getvalue())
 
