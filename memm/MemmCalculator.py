@@ -67,10 +67,6 @@ def extract_features_from_histories(histories, not_rare_words):
     return features
 
 
-def to_feature(i):
-    return "%s:1" % i
-
-
 def to_feature_lines(histories, unique_features, tags, output_file_path='features_output.txt'):
     tags_indexes = dict((tag, index) for index, tag in enumerate(tags))
     enumerated_unique_features = list(enumerate(unique_features))
