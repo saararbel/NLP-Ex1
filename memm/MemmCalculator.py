@@ -99,4 +99,4 @@ if __name__ == '__main__':
     histories = build_history(tagged_lines, non_rare_words)
     print "History built"
     output = to_feature_lines(histories, non_rare_words, index_tags(tags))
-    write_output_file(output, 'features_output2.txt')
+    write_output_file(output, sys.argv[2] if len(sys.argv) >= 2 else 'features_output2.txt')
