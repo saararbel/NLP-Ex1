@@ -9,46 +9,50 @@ RE_HYPHEN = re.compile('-')
 RE_CAPITAL = re.compile('[A-Z]')
 
 
-class PrefixAndSize(Feature):
-    def __init__(self, history):
-        self.history = history
+class Prefix(Feature):
+    def __init__(self, prefix):
+        self.prefix = prefix
 
     def __repr__(self):
-        return "PrefixAndSize(word=%s)" % self.history['wi']
+        return "Prefix(prefix=%s)" % self.prefix
 
     def __eq__(self, other):
-        if isinstance(other, PrefixAndSize):
-            return self.history['wi'] == other.history['wi']
+        if isinstance(other, Prefix):
+            return self.prefix == other.prefix
         return False
 
     def test(self, current_history):
-        return len(current_history['wi']) <= 4 and self.history['wi'].startswith(current_history['wi'])
+        return current_history.startswith(self.prefix)
 
 
-class PrefixAndSizeBuilder(FeatureBuilder):
-    def from_history(self, history):
-        return PrefixAndSize(history)
+def prefixed(word):
+    return [word[:i] for i in xrange(1, min(5, len(word)))]
 
 
-class SuffixAndSize(Feature):
-    def __init__(self, history):
-        self.history = history
+class PrefixBuilder(FeatureBuilder):
+    def multiple_from_history(self, history):
+        return [Prefix(history['wi'][:i]) for i in xrange(1, min(5, len(history['wi'])))]
+
+
+class Suffix(Feature):
+    def __init__(self, suffix):
+        self.suffix = suffix
 
     def __repr__(self):
-        return "SuffixAndSize(word=%s)" % self.history['wi']
+        return "Suffix(suffix=%s)" % self.suffix
 
     def __eq__(self, other):
-        if isinstance(other, SuffixAndSize):
-            return self.history['wi'] == other.history['wi']
+        if isinstance(other, Suffix):
+            return self.suffix == other.suffix
         return False
 
     def test(self, current_history):
-        return len(current_history['wi']) <= 4 and self.history['wi'].endswith(current_history['wi'])
+        return current_history.endswith(self.suffix)
 
 
-class SuffixAndSizeBuilder(FeatureBuilder):
-    def from_history(self, history):
-        return SuffixAndSize(history)
+class SuffixBuilder(FeatureBuilder):
+    def multiple_from_history(self, history):
+        return [Suffix(history['wi'][-i:]) for i in xrange(1, min(5, len(history['wi'])))]
 
 
 class ContainsANumber(Feature):
@@ -109,6 +113,6 @@ class ContainsAnHyphenBuilder(FeatureBuilder):
 
 
 class RareFeatures():
-    FEATURES = GeneralFeatures.FEATURES + [PrefixAndSizeBuilder(), SuffixAndSizeBuilder(), ContainsANumberBuilder(),
+    FEATURES = GeneralFeatures.FEATURES + [PrefixBuilder(), SuffixBuilder(), ContainsANumberBuilder(),
                                            ContainsAnUpperCaseBuilder(),
                                            ContainsAnHyphenBuilder()]

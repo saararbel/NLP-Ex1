@@ -1,9 +1,11 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 
 class FeatureBuilder():
     __metaclass__ = ABCMeta
 
-    @abstractmethod
     def from_history(self, history):
-        pass
+        raise NotImplementedError
+
+    def multiple_from_history(self, history):
+        return [self.from_history(history)]

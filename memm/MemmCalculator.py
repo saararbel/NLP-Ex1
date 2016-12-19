@@ -5,8 +5,6 @@ from collections import Counter
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from memm import general_features
-from memm.general_features import GeneralFeatures
 from memm.non_rare_features import NotRareFeatures
 from memm.rare_features import RareFeatures
 
@@ -49,7 +47,6 @@ def build_history(lines, not_rare_words):
                        'wi+2': padded_line[i + 2][0], 'ti': word_tag_tuple[1], 'ti-1': padded_line[i - 1][1],
                        'ti-2': padded_line[i - 2][1]}
             histories.append(history)
-    print "History built"
     return histories
 
 
@@ -60,47 +57,46 @@ def feature_builders(not_rare_words, word):
     return RareFeatures.FEATURES
 
 
-def extract_features_from_histories(histories, not_rare_words):
-    features = []
+def to_feature_lines(histories, not_rare_words, indexed_tags):
+    index = 1
+    features = {}
+    features_file = StringIO()
     for history in histories:
+        word_features = []
         for feature_builder in feature_builders(not_rare_words, history['wi']):
-            features.append(feature_builder.from_history(history))
-            # print "Finished features for " + history['wi'] + ", " + history['ti']
-    print "features extracted"
-    return features
+            for feature in feature_builder.multiple_from_history(history):
+                if feature not in features:
+                    features[feature] = index
+                    index += 1
+                word_features.append(features[feature])
+        features_file.write("%s " % indexed_tags[history['ti']])
+        features_file.write(':1 '.join(str(i) for i in sorted(word_features)))
+        features_file.write(':1\n')
+
+    print 'total features: %s' % len(features)
+    return features_file.getvalue()
 
 
-def to_feature_lines(histories, unique_features, tags, output_file_path='features_output.txt'):
-    tags_indexes = dict((tag, index) for index, tag in enumerate(tags))
-    enumerated_unique_features = list(enumerate(unique_features))
-    # with open(output_file_path, 'w') as output_file:
+def write_output_file(output, output_file_path):
     with open(output_file_path, 'w') as output_file:
-        print 'File "%s" tuncated' % output_file_path
-    file_str = StringIO()
-    for word_index, history in enumerate(histories):
-        file_str.write("%s " % tags_indexes[history['ti']])
-        file_str.write(':1 '.join([str(i) for i, feature in enumerated_unique_features if feature.test(history)]))
-        file_str.write(':1\n')
-        if word_index % 100 == 0:
-            print "Word %s checked" % word_index
-            if word_index % 10000 == 0:
-                with open(output_file_path, 'a') as output_file:
-                    output_file.write(file_str.getvalue())
-                    file_str = StringIO()
-    with open(output_file_path, 'a') as output_file:
-        output_file.write(file_str.getvalue())
+        output_file.write(output)
+
+
+def index_tags(tags):
+    return dict((tag, str(index)) for index, tag in enumerate(tags))
+
+
+def stringify_tag(tag, index):
+    return '%s %s' % (tag, index)
 
 
 if __name__ == '__main__':
     raw_seq_lines = parse_input_file(sys.argv[1])
     tagged_lines, non_rare_words, tags = extract_data(raw_seq_lines)
-    print 'Tags: [' + '|'.join(tag + ' ' + str(i) for i, tag in enumerate(tags)) + ']'
-    print 'Words, total %s ' % sum(len(x) for x in tagged_lines)
+    print 'Tags: [%s]' % '|'.join(stringify_tag(tag, i) for i, tag in enumerate(tags))
+    write_output_file(' '.join(tag for tag in tags), 'tags')
+    print 'Words: total %s ' % sum(len(x) for x in tagged_lines)
     histories = build_history(tagged_lines, non_rare_words)
-    features = extract_features_from_histories(histories, non_rare_words)
-
-    unique_features = set(features)
-    print "Finished features: %s, unique: %s" % (str(len(features)), str(len(unique_features)))
-
-    to_feature_lines(histories, unique_features, tags)
-    print "Finished writing to output file"
+    print "History built"
+    output = to_feature_lines(histories, non_rare_words, index_tags(tags))
+    write_output_file(output, 'features_output2.txt')
