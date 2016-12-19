@@ -1,7 +1,9 @@
 import os
+import shelve
 import sys
 from cStringIO import StringIO
 from collections import Counter
+from contextlib import closing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -73,8 +75,7 @@ def to_feature_lines(histories, not_rare_words, indexed_tags):
         features_file.write(':1 '.join(str(i) for i in sorted(word_features)))
         features_file.write(':1\n')
 
-    print 'total features: %s' % len(features)
-    return features_file.getvalue()
+    return features_file.getvalue(), features
 
 
 def write_output_file(output, output_file_path):
@@ -90,13 +91,22 @@ def stringify_tag(tag, index):
     return '%s %s' % (tag, index)
 
 
+def marshal_tags_and_features(tags_and_features_file, tags, features):
+    with closing(shelve.open(tags_and_features_file)) as shelf:
+        shelf['tags'] = tags
+        shelf['features'] = features
+    print "Wrote tags and features to shelf file: %s" % tags_and_features_file
+
+
 if __name__ == '__main__':
     raw_seq_lines = parse_input_file(sys.argv[1])
     tagged_lines, non_rare_words, tags = extract_data(raw_seq_lines)
     print 'Tags: [%s]' % '|'.join(stringify_tag(tag, i) for i, tag in enumerate(tags))
-    write_output_file(' '.join(tag for tag in tags), 'tags')
+    # write_output_file(' '.join(tag for tag in tags), 'tags')
     print 'Words: total %s ' % sum(len(x) for x in tagged_lines)
     histories = build_history(tagged_lines, non_rare_words)
     print "History built"
-    output = to_feature_lines(histories, non_rare_words, index_tags(tags))
-    write_output_file(output, sys.argv[2] if len(sys.argv) >= 2 else 'features_output2.txt')
+    output, features = to_feature_lines(histories, non_rare_words, index_tags(tags))
+    print 'total features: %s' % len(features)
+    marshal_tags_and_features(sys.argv[3] if len(sys.argv) >= 4 else 'tags_and_features', tags, features)
+    write_output_file(output, sys.argv[2] if len(sys.argv) >= 3 else 'features_output.txt')

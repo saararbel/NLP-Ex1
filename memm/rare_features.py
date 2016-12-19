@@ -113,6 +113,6 @@ class ContainsAnHyphenBuilder(FeatureBuilder):
 
 
 class RareFeatures():
-    FEATURES = GeneralFeatures.FEATURES + [PrefixBuilder(), SuffixBuilder(), ContainsANumberBuilder(),
-                                           ContainsAnUpperCaseBuilder(),
-                                           ContainsAnHyphenBuilder()]
+    ONLY_RARE = [PrefixBuilder(), SuffixBuilder(), ContainsANumberBuilder(), ContainsAnUpperCaseBuilder(),
+                 ContainsAnHyphenBuilder()]
+    FEATURES = GeneralFeatures.FEATURES + ONLY_RARE

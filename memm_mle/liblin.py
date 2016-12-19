@@ -36,4 +36,4 @@ class LiblinearLogregPredictor(object):
 if __name__ == '__main__':
     # usage example
     llp = LiblinearLogregPredictor('..\memm\memm_model')
-    print llp.predict([1,2,9])
+    print llp.predict([-1,-1])
