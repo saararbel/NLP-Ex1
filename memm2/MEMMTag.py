@@ -1,15 +1,12 @@
-import os
 import shelve
 import sys
 from contextlib import closing
 from math import log
 
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
+from hmm2.HMMTag import extract_words, extract_tags_from, calulate_acurracy
 from liblin import LiblinearLogregPredictor
-from hmm_viterbi.HMMTag import extract_words
-from memm.non_rare_features import NotRareFeatures
-from memm.rare_features import RareFeatures
+from memm1.non_rare_features import NotRareFeatures
+from memm1.rare_features import RareFeatures
 
 ALL_FEATURES = NotRareFeatures.FEATURES + RareFeatures.ONLY_RARE
 
@@ -23,6 +20,16 @@ def extract_features_indexes_from(history, features):
     return active_features
 
 
+def get_max_tuple(v):
+    max_prob = v.itervalues().next()
+    max_key = None
+    for key in v:
+        if v[key] >= max_prob:
+            max_prob = v[key]
+            max_key = key
+    return max_key
+
+
 def vitterbi_algorithm(lines, llp, features, tags):
     final_line_tags = []
     for line_number, line in enumerate(lines):
@@ -33,17 +40,19 @@ def vitterbi_algorithm(lines, llp, features, tags):
             max_prob_tag = {}
             for t_tag, t in v[i]:
                 history = build_history(i, line, t, t_tag, word)
-                tags_with_prob = llp.predict(extract_features_indexes_from(history, features))
-                for r_tag, r_prob in tags_with_prob.iteritems():
-                    r_prob = v[i][(t_tag, t)] + log(r_prob)
-                    r_real_tag = tags[int(r_tag)]
-                    if (t, r_real_tag) not in maxProb or r_prob > maxProb[(t, r_real_tag)]:
-                        maxProb[(t, r_real_tag)] = r_prob
+                feature_indexes = extract_features_indexes_from(history, features)
+                tags_with_prob = llp.predict(feature_indexes)
+                for r in tags_with_prob:
+                    temp = v[i][(t_tag, t)] + log(tags_with_prob[r])
+                    r_real_tag = tags[int(r)]
+                    if (t, r_real_tag) not in maxProb or temp > maxProb[(t, r_real_tag)]:
+                        maxProb[(t, r_real_tag)] = temp
                         max_prob_tag[(t, r_real_tag)] = t_tag
             v.append(maxProb)
             bp.append(max_prob_tag)
         print line_number
-        before_last_tag, last_tag = max(v[-1], key=lambda tuple: tuple[-1])
+        # before_last_tag, last_tag = max(v[-1], key=lambda tuple: tuple[-1])
+        before_last_tag, last_tag = get_max_tuple(v[-1])
         line_tags = [last_tag]
         if before_last_tag != 'start':
             line_tags.append(before_last_tag)
@@ -75,5 +84,8 @@ if __name__ == '__main__':
     lines = extract_words(input_file_name)
     with closing(shelve.open(other_file_name)) as shelf:
         tagged_lines = vitterbi_algorithm(lines, llp, shelf['features'], shelf['tags'])
+        real_tag_lines = extract_tags_from('..\\ass1-tagger-test')
+        accuracy = calulate_acurracy(tagged_lines, real_tag_lines)
+        print "Accuracy: %s" % accuracy
         with open(out_file_name, 'w') as out_file:
             out_file.write('\n'.join(' '.join(tagged_line) for tagged_line in tagged_lines) + '\n')

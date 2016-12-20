@@ -1,5 +1,5 @@
-from memm.feature import Feature
-from memm.featurebuilder import FeatureBuilder
+from memm1.feature import Feature
+from memm1.featurebuilder import FeatureBuilder
 
 
 class LastTagAndCurrentTag(Feature):

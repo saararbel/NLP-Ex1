@@ -7,8 +7,8 @@ from contextlib import closing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from memm.non_rare_features import NotRareFeatures
-from memm.rare_features import RareFeatures
+from memm1.non_rare_features import NotRareFeatures
+from memm1.rare_features import RareFeatures
 
 
 def parse_input_file(trainFilePath):
@@ -108,5 +108,5 @@ if __name__ == '__main__':
     print "History built"
     output, features = to_feature_lines(histories, non_rare_words, index_tags(tags))
     print 'total features: %s' % len(features)
-    marshal_tags_and_features(sys.argv[3] if len(sys.argv) >= 4 else 'tags_and_features', tags, features)
+    marshal_tags_and_features(sys.argv[3] if len(sys.argv) >= 4 else 'other_file', tags, features)
     write_output_file(output, sys.argv[2] if len(sys.argv) >= 3 else 'features_output.txt')

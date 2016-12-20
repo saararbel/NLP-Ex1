@@ -1,6 +1,6 @@
 import sys
-from MleCalculator import calc_e_prob
-from MleCalculator import calcQprob
+from MLETrain import calc_e_prob
+from MLETrain import calcQprob
 
 
 def parseInputFile():

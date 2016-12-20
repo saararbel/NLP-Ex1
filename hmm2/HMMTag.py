@@ -94,7 +94,6 @@ def calulate_acurracy(tag_lines, real_tag_lines):
     for i, line in enumerate(tag_lines):
         for j, tag in enumerate(line):
             total += 1
-            print "i, j = " + str(i) + ", " + str(j)
             if tag == real_tag_lines[i][j]:
                 correct += 1
 

@@ -1,6 +1,6 @@
-from memm.feature import Feature
-from memm.featurebuilder import FeatureBuilder
-from memm.general_features import GeneralFeatures
+from memm1.feature import Feature
+from memm1.featurebuilder import FeatureBuilder
+from memm1.general_features import GeneralFeatures
 
 
 class WordAndTag(Feature):
